@@ -18,7 +18,26 @@ In high-volume manufacturing, catching defective units before they ship is criti
 6. **Feature Importance** — which process variables are most associated with defects
 
 ## Results
-*(To be filled in after modeling)*
+
+Class imbalance made this a non-trivial classification problem — only 6.6% of units failed. A naive model predicting "pass" every time would score 93% accuracy while catching zero defects.
+
+| Model | Fail Precision | Fail Recall | Fail F1 |
+|---|---|---|---|
+| Logistic Regression (unweighted baseline) | 0.10 | 0.05 | 0.06 |
+| Logistic Regression (class-weighted) | 0.88 | 0.82 | 0.85 |
+| Random Forest (class-weighted) | 0.00 | 0.00 | 0.00 |
+| Random Forest + SMOTE | 0.33 | 0.05 | 0.08 |
+
+**Key findings:**
+- Reduced feature space from 590 to 297 sensors by removing high-missing-value and near-zero-variance columns.
+- Plain accuracy is misleading on this dataset: the unweighted baseline hit 91% accuracy while catching only 5% of actual defects.
+- Class-weighted Logistic Regression was the strongest model by a wide margin, improving Fail recall from 5% to 82%.
+- Random Forest, with or without SMOTE oversampling, underperformed Logistic Regression on this dataset — a reminder that more complex models don't always win, especially on small, high-dimensional, imbalanced data.
+
+![Feature Importance](outputs/feature_importance.png)
+![Confusion Matrix](outputs/confusion_matrix.png)
+
+**Interpretation:** In a quality control context, missing a real defect (false negative) is typically far costlier than a false alarm (false positive). This project prioritized recall on the Fail class accordingly — the same logic Six Sigma practitioners apply when weighing inspection sensitivity against cost.
 
 ## Why This Project
 This project mirrors real quality control work: distinguishing signal from 590 noisy process variables, respecting that false negatives (missed defects) and false positives (false alarms) carry very different costs — a tradeoff Six Sigma practitioners navigate constantly, now framed as a precision/recall decision.
