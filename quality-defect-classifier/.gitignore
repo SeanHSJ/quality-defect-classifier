@@ -1,8 +1,0 @@
-data/*.data
-data/*.zip
-.ipynb_checkpoints/
-__pycache__/
-*.pyc
-.venv/
-venv/
-.DS_Store
